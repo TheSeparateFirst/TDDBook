@@ -7,7 +7,7 @@ class NewVisitorTest(unittest.TestCase):
 
     # Initialization and browser startup
     def setUp(self):
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Chrome()
 
     # Cleanup
     def tearDown(self):
