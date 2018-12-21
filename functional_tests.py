@@ -39,16 +39,23 @@ class NewVisitorTest(unittest.TestCase):
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: Purchase uptimewarriors.com' for row in rows),
-            "New to-do item did not appear in table"
-        )
+        self.assertIn('1: Purchase uptimewarriors.com',
+                      [row.text for row in rows])
 
         # Thise is still a text box inviting him to add anothis item. He
         # enters "Make a wordpress blog for uptimewarriors.com"
-        self.fail('Finish the test!')
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Make a wordpress blog for uptimewarriors.com')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
 
         # The page updates again, and now shows both items on his list
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('1: Purchase uptimewarriors.com',
+                      [row.text for row in rows])
+        self.assertIn('2: Make a wordpress blog for uptimewarriors.com',
+                      [row.text for row in rows])
 
         # JDub wonders whether the site will remember his list. Then He sees
         # that the site has generated a unique URL for him -- there is some
@@ -57,6 +64,8 @@ class NewVisitorTest(unittest.TestCase):
         # He visits that URL - his to-do list is still there.
 
         # Satisfied, He goes back to sleep
+        self.fail('Finish the test!')
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
