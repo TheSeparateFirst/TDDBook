@@ -2,3 +2,4 @@
 *.pyc
 virtualenv/
 geckodriver.log
+.vscode/
