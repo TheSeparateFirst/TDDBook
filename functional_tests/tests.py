@@ -83,6 +83,7 @@ class NewVisitorTest(LiveServerTestCase):
         # He notices that his list has a unique URL
         jdub_list_url = self.browser.current_url
         self.assertRegex(jdub_list_url, '/lists/.+')
+<<<<<<< HEAD
 
         # A new user, Nick, comes to the site.
 
@@ -97,3 +98,5 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotIn('Make a wordpress blog for uptimewarriors.com', page_text)
 
         # Nick enters his own
+=======
+>>>>>>> f7f58c60b7c0fa5a1b219709e1710e6486f8f494
