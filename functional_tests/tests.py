@@ -2,6 +2,9 @@ from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
+from selenium.common.exceptions import WebDriverException
+
+MAX_WAIT = 10
 
 class NewVisitorTest(LiveServerTestCase):
 
@@ -13,10 +16,18 @@ class NewVisitorTest(LiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
 
-    def check_for_row_in_list_table(self, row_text):
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn(row_text, [row.text for row in rows])
+    def wait_for_row_in_list_table(self, row_text):
+        start_time = time.time()
+        while True:
+            try:
+                table = self.browser.find_element_by_id('id_list_table')
+                rows = table.find_elements_by_tag_name('tr')
+                self.assertIn(row_text, [row.text for row in rows])
+                return
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > MAX_WAIT:
+                    raise e
+                time.sleep(0.5)
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # JDub has heard about this new to-do app, and is now losing his goddamn mind
@@ -40,19 +51,17 @@ class NewVisitorTest(LiveServerTestCase):
         # When He hits enter, the page updates, and now the page lists
 # "1: Purchase uptimewarriors.com" as an item in a to-do list
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
-        self.check_for_row_in_list_table('1: Purchase uptimewarriors.com')
+        self.wait_for_row_in_list_table('1: Purchase uptimewarriors.com')
 
         # There is still a text box inviting him to add another item. He
         # enters "Make a wordpress blog for uptimewarriors.com"
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Make a wordpress blog for uptimewarriors.com')
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
 
         # The page updates again, and now shows both items on his list
-        self.check_for_row_in_list_table('1: Purchase uptimewarriors.com')
-        self.check_for_row_in_list_table('2: Make a wordpress blog for uptimewarriors.com')
+        self.wait_for_row_in_list_table('1: Purchase uptimewarriors.com')
+        self.wait_for_row_in_list_table('2: Make a wordpress blog for uptimewarriors.com')
 
 
         # JDub wonders whether the site will remember his list. Then He sees
