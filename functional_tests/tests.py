@@ -86,11 +86,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # A new user, Nick, comes to the site.
 
-<<<<<<< HEAD
         ## Restart the browser session to avoid state
-=======
-        # Restart the browser session to avoid state
->>>>>>> cf17eb3348ad1fb046b8038ba159161e4aff9787
         self.browser.quit()
         self.browser = webdriver.Chrome()
 
