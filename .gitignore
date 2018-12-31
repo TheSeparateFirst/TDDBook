@@ -3,3 +3,4 @@
 virtualenv/
 geckodriver.log
 .vscode/
+/static
